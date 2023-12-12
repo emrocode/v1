@@ -18,6 +18,8 @@ const config = {
     bottom: [],
   },
 
+  work: [],
+
   heroLinks: [
     {
       key: "email",

@@ -13,8 +13,8 @@
     "clean": "rimraf /dist"
   },
   "dependencies": {
+    "@octokit/rest": "^20.0.2",
     "darkify-js": "^1.200.2023",
-    "octokit": "^3.1.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },

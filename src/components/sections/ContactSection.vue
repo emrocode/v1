@@ -4,7 +4,7 @@ import MainLink from "@/components/MainLink.vue";
 <template>
   <section id="contact">
     <div class="section">
-      <h2 class="section-title">Connect</h2>
+      <h2 class="section-title">Contact me</h2>
       <p class="section-paragraph">You can contact me by these means, I will respond shortly.</p>
     </div>
     <div class="contact-container">

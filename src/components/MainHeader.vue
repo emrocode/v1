@@ -1,23 +1,23 @@
 <script setup>
 import IconLogo from "@/assets/icons/brand/IconLogo.vue";
-import IconArrowLeft from "@/assets/icons/IconArrowLeft.vue";
+import IconArrowBack from "@/assets/icons/IconArrowBack.vue";
 import IconTone from "@/assets/icons/IconTone.vue";
 </script>
 <template>
   <header>
     <nav class="container nav">
-      <MainLink to="/" aria-label="Emilio Romero Logo" class="nav-brand">
-        <component :is="isHome ? IconLogo : IconArrowLeft" />
-      </MainLink>
+      <Link to="/" aria-label="Emilio Romero Logo" class="nav-brand">
+        <component :is="isHome ? IconLogo : IconArrowBack" />
+      </Link>
       <ul class="menu">
         <li class="menu-item" v-for="item in navs" :key="item.key">
-          <MainLink :to="item.path" class="menu-link" activeClass="active">
+          <Link :to="item.path" class="menu-link" activeClass="active">
             {{ item.key }}
-          </MainLink>
+          </Link>
         </li>
         <li class="menu-item menu-spp" v-if="navs[0].key && navs[0].path"></li>
         <li class="menu-item">
-          <button id="dTheme" class="center menu-button" title="Alternar tema">
+          <button id="dTheme" class="center menu-button" title="Toggle theme">
             <IconTone />
           </button>
         </li>
@@ -26,7 +26,6 @@ import IconTone from "@/assets/icons/IconTone.vue";
   </header>
 </template>
 <script>
-import MainLink from "@/components/MainLink.vue";
 import Darkify from "darkify-js";
 import config from "@config";
 

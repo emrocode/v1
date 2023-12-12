@@ -1,37 +1,28 @@
-<script setup>
-import MainLink from "@/components/MainLink.vue";
-</script>
 <template>
   <section>
     <div v-if="loading">Loading...</div>
     <div v-if="error">Error grabbing repositories. Try again later.</div>
-    <TransitionGroup
-      tag="div"
-      class="wrapper"
-      mode="out-in"
-      appear
-      @beforeEnter="beforeEnter"
-      @enter="onEnter">
+    <TransitionGroup tag="div" class="wrapper" @beforeEnter="beforeEnter" @enter="onEnter">
       <article class="card" v-for="(repo, i) in repoToShow" :key="repo.id" :data-index="i">
-        <div v-if="matchRepo(repo.name)" class="card-used">used now</div>
+        <span class="card-date">{{ formatDate(repo.created_at) }}</span>
         <div class="card-body">
-          <span class="card-date">{{ formatDate(repo.created_at) }}</span>
           <h3 class="card-title">
-            <MainLink :to="repo.html_url">{{ repo.name }}</MainLink>
+            <Link :to="repo.html_url">{{ repo.name }}</Link>
           </h3>
           <p class="card-paragraph">{{ repo.description }}</p>
         </div>
-        <div class="card-stats">
-          <span>{{ repo.stargazers_count }} Stars</span>
-          <span></span>
-          <span>{{ repo.language || "Unknown" }}</span>
-        </div>
+        <ul class="menu card-stats">
+          <li class="menu-item">{{ repo.stargazers_count }} Stars</li>
+          <li class="menu-item menu-spp"></li>
+          <li class="menu-item">{{ repo.language || "Unknown" }}</li>
+        </ul>
       </article>
     </TransitionGroup>
   </section>
 </template>
 <script>
-import { Octokit } from "octokit";
+import { Octokit } from "@octokit/rest";
+import config from "@config";
 import pkg from "@pkg";
 
 var storageKey = "github-data";
@@ -50,8 +41,9 @@ export default {
   data() {
     return {
       repositories: [],
-      loading: true,
       error: false,
+      loading: true,
+      updateInterval: 7 * 24 * 60 * 60 * 1000,
     };
   },
   computed: {
@@ -59,7 +51,7 @@ export default {
       const clonedRepos = [...this.repositories];
 
       // if maxItems is not defined, sort by date; else, sort by stars
-      if (this.maxItems === 1 / 0) {
+      if (this.maxItems === this.$options.props.maxItems.default) {
         return clonedRepos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       } else {
         // top maxItems (4) most stars
@@ -73,7 +65,7 @@ export default {
     async grabRepositories() {
       try {
         const octokit = new Octokit({
-          auth: import.meta.env.API_TOKEN,
+          auth: import.meta.env.VITE_GITHUB_TOKEN,
         });
 
         let data = [];
@@ -87,12 +79,37 @@ export default {
           if (res.length === 0) {
             break;
           } else {
-            data = data.concat(res);
+            const ownRepo = res.filter(x => x.fork !== true);
+
+            data = data.concat(
+              ownRepo.map(repo => ({
+                id: repo.id.toString(),
+                created_at: repo.created_at,
+                html_url: repo.html_url,
+                name: repo.name,
+                description: repo.description,
+                stargazers_count: repo.stargazers_count.toString(),
+                language: repo.language,
+              }))
+            );
             page++;
           }
         }
 
-        window.sessionStorage.setItem(storageKey, JSON.stringify(data));
+        // push local data in storage
+        data.push(
+          ...config.work.map(repo => ({
+            id: repo.id.toString(),
+            created_at: repo.created_at,
+            html_url: repo.html_url,
+            name: repo.name,
+            description: repo.description,
+            stargazers_count: repo.stargazers_count.toString(),
+            language: repo.language,
+          }))
+        );
+
+        window.localStorage.setItem(storageKey, JSON.stringify({ data, timestamp: Date.now() }));
         this.repositories = data;
       } catch (error) {
         console.error("Error grabbing repositories:", error);
@@ -111,20 +128,19 @@ export default {
         year: "numeric",
       });
     },
-    matchRepo(name) {
-      const dependencies = Object.keys(pkg.dependencies || []);
-
-      // return true if any dependency matches the repository name
-      return dependencies.some(dependency => name.toLowerCase().includes(dependency.toLowerCase()));
-    },
     grabLocalRepositories() {
-      const sessionData = window.sessionStorage.getItem(storageKey);
+      const STO = window.localStorage.getItem(storageKey);
 
-      if (!sessionData) {
+      if (!STO) {
         this.grabRepositories();
       } else {
-        this.repositories = JSON.parse(sessionData);
-        this.loading = false;
+        const { data, timestamp } = JSON.parse(STO);
+        if (Date.now() - timestamp >= this.updateInterval) {
+          this.grabRepositories();
+        } else {
+          this.repositories = data;
+          this.loading = false;
+        }
       }
     },
     beforeEnter(el) {
@@ -138,14 +154,10 @@ export default {
       el.style.opacity = 1;
       el.style.transform = "translateY(0)";
 
-      el.addEventListener(
-        "transitionend",
-        () => {
-          this.afterEnter(el);
-          done();
-        },
-        { once: true }
-      );
+      el.addEventListener("transitionend", () => {
+        this.afterEnter(el);
+        done();
+      });
     },
     afterEnter(el) {
       el.style.opacity = "";
@@ -154,7 +166,7 @@ export default {
     },
   },
   mounted() {
-    this.grabLocalRepositories();
+    this.grabLocalRepositories() || [];
   },
 };
 </script>
