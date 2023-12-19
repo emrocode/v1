@@ -40,6 +40,7 @@ export default {
     const options = {
       autoMatchTheme: true,
       useLocalStorage: true,
+      useColorScheme: ["#ffffff", "#1f1f1f"],
     };
     this.darkModeWithDarkify = new Darkify("#dTheme", options);
   },

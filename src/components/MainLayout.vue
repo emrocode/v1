@@ -7,7 +7,7 @@ import MainFooter from "@/components/MainFooter.vue";
   <main class="container">
     <slot />
   </main>
-  <MainFooter v-if="isHome" />
+  <MainFooter v-if="showFooter" />
 </template>
 <script>
 export default {
@@ -16,8 +16,8 @@ export default {
     MainFooter,
   },
   computed: {
-    isHome() {
-      return this.$route.name === "home";
+    showFooter() {
+      return this.$route.name !== "error";
     },
   },
 };

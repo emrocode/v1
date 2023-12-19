@@ -97,8 +97,10 @@ export default {
         }
 
         // push local data in storage
+        const dataToShow = config.work.filter(x => x.show === true);
+
         data.push(
-          ...config.work.map(repo => ({
+          ...dataToShow.map(repo => ({
             id: repo.id.toString(),
             created_at: repo.created_at,
             html_url: repo.html_url,
