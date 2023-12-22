@@ -1,13 +1,8 @@
 import IconEnvelope from "@/assets/icons/IconEnvelope.vue";
 import IconTelegram from "@/assets/icons/brand/IconTelegram.vue";
-import IconFolder from "@/assets/icons/IconFolder.vue";
 import { markRaw } from "vue";
 
 const config = {
-  title: "Emilio Romero",
-  description:
-    "Front-end developer, I combine creativity and technical skills to create innovative solutions.",
-
   navs: {
     top: [
       {
@@ -23,30 +18,22 @@ const config = {
   heroLinks: [
     {
       key: "email",
-      path: "/#contact",
+      path: "mailto:emrocode@gmail.com",
       icon: markRaw(IconEnvelope),
     },
     {
-      key: "archive",
-      path: "/archive",
-      icon: markRaw(IconFolder),
+      key: "telegram",
+      path: "https://t.me/emilioromz/",
+      icon: markRaw(IconTelegram),
     },
   ],
 
-  contactLinks: [
-    {
-      platform: "Telegram",
-      user: "t.me/emilioromz",
-      icon: markRaw(IconTelegram),
-      url: "https://t.me/emilioromz/",
-    },
-    {
-      platform: "Email",
-      user: "to:emrocode",
-      icon: markRaw(IconEnvelope),
-      url: "mailto:emrocode@gmail.com",
-    },
-  ],
+  skills: {
+    languages: ["js", "ts", "pug", "html", "css"],
+    frameworks: ["nodejs", "next", "react", "vue", "tailwindcss"],
+    tools: ["git", "github", "vscode", "vite", "vercel"],
+    design: ["figma"],
+  },
 
   connections: [
     {

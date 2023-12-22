@@ -7,7 +7,7 @@ import MainFooter from "@/components/MainFooter.vue";
   <main class="container">
     <slot />
   </main>
-  <MainFooter v-if="showFooter" />
+  <MainFooter v-show="showFooter" />
 </template>
 <script>
 export default {

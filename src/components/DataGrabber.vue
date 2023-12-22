@@ -1,24 +1,44 @@
+<script setup>
+import IconRefresh from "@/assets/icons/IconRefresh.vue";
+</script>
 <template>
-  <section>
+  <div>
     <div v-if="loading">Loading...</div>
     <div v-if="error">Error grabbing repositories. Try again later.</div>
-    <TransitionGroup tag="div" class="wrapper" @beforeEnter="beforeEnter" @enter="onEnter">
-      <article class="card" v-for="(repo, i) in repoToShow" :key="repo.id" :data-index="i">
-        <span class="card-date">{{ formatDate(repo.created_at) }}</span>
-        <div class="card-body">
-          <h3 class="card-title">
-            <Link :to="repo.html_url">{{ repo.name }}</Link>
-          </h3>
-          <p class="card-paragraph">{{ repo.description }}</p>
-        </div>
-        <ul class="menu card-stats">
-          <li class="menu-item">{{ repo.stargazers_count }} Stars</li>
-          <li class="menu-item menu-spp"></li>
-          <li class="menu-item">{{ repo.language || "Unknown" }}</li>
-        </ul>
-      </article>
+    <ul class="menu filter" v-show="!loading && !error && isArchivePage">
+      <li class="menu-item" v-for="(lang, i) in useLanguages" :key="i">
+        <button
+          class="filter-button"
+          :class="{ active: selectedLanguage === lang }"
+          @click="selectLanguage(lang)">
+          {{ lang || "Unknown" }}
+        </button>
+      </li>
+      <li class="menu-item">
+        <button class="filter-button active" @click="refreshLocalData">
+          <span>Refresh data</span>
+          <IconRefresh />
+        </button>
+      </li>
+    </ul>
+    <TransitionGroup
+      tag="div"
+      class="wrapper"
+      @beforeEnter="beforeEnter"
+      @enter="enter"
+      @leave="leave">
+      <Card
+        v-for="(repo, index) in repoToShow"
+        :key="repo.id"
+        :data-index="index"
+        :date="repo.created_at"
+        :external="repo.html_url"
+        :name="repo.name"
+        :description="repo.description"
+        :stargazers_count="repo.stargazers_count"
+        :language="repo.language" />
     </TransitionGroup>
-  </section>
+  </div>
 </template>
 <script>
 import { Octokit } from "@octokit/rest";
@@ -43,22 +63,35 @@ export default {
       repositories: [],
       error: false,
       loading: true,
+      selectedLanguage: "All",
       updateInterval: 7 * 24 * 60 * 60 * 1000,
     };
   },
   computed: {
     repoToShow() {
-      const clonedRepos = [...this.repositories];
+      const data = [...this.repositories];
+
+      if (this.selectedLanguage !== "All") {
+        return data
+          .filter(repo => repo.language === this.selectedLanguage)
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      }
 
       // if maxItems is not defined, sort by date; else, sort by stars
       if (this.maxItems === this.$options.props.maxItems.default) {
-        return clonedRepos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        return data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       } else {
         // top maxItems (4) most stars
-        return clonedRepos
-          .sort((a, b) => b.stargazers_count - a.stargazers_count)
-          .slice(0, this.maxItems);
+        return data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, this.maxItems);
       }
+    },
+    useLanguages() {
+      const lang = [...new Set(this.repositories.map(repo => repo.language))];
+      lang.unshift("All");
+      return lang;
+    },
+    isArchivePage() {
+      return this.$route.name === "archive";
     },
   },
   methods: {
@@ -68,8 +101,8 @@ export default {
           auth: import.meta.env.VITE_GITHUB_TOKEN,
         });
 
-        let data = [];
-        let page = 1;
+        var data = [];
+        var page = 1;
 
         for (;;) {
           const { data: res } = await octokit.request(this.url, {
@@ -121,15 +154,6 @@ export default {
         this.loading = false;
       }
     },
-    formatDate(timestamp) {
-      const date = new Date(timestamp);
-
-      return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      });
-    },
     grabLocalRepositories() {
       const STO = window.localStorage.getItem(storageKey);
 
@@ -145,26 +169,40 @@ export default {
         }
       }
     },
+    selectLanguage(lang) {
+      this.selectedLanguage = lang;
+    },
+    refreshLocalData() {
+      window.localStorage.removeItem(storageKey);
+      return window.location.reload();
+    },
     beforeEnter(el) {
       el.style.opacity = 0;
-      el.style.transform = "translateY(20px)";
-      el.style.transition = "opacity 500ms, transform 500ms";
+      el.style.visibility = "hidden";
+      el.style.transform = "translateY(15px)";
+      el.style.transition = "opacity 500ms linear, transform 500ms linear";
       el.style.transitionDelay = `${el.dataset.index * 100}ms`;
     },
-    onEnter(el, done) {
+    enter(el, done) {
       el.offsetHeight;
       el.style.opacity = 1;
-      el.style.transform = "translateY(0)";
+      el.style.visibility = "visible";
+      el.style.transform = "translateY(0px)";
 
       el.addEventListener("transitionend", () => {
         this.afterEnter(el);
-        done();
+        done;
       });
     },
     afterEnter(el) {
       el.style.opacity = "";
+      el.style.visibility = "";
       el.style.transform = "";
+      el.style.transition = "";
       el.style.transitionDelay = "";
+    },
+    leave(el) {
+      el.style.display = "none";
     },
   },
   mounted() {

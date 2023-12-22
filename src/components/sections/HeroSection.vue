@@ -1,8 +1,8 @@
 <template>
   <section class="hero">
-    <h1 class="hero-title">Emilio <span>Romero</span></h1>
+    <h1 class="hero-title">Emilio Romero</h1>
     <p class="hero-description">
-      <span>Front-end developer,</span> I combine creativity and technical skills to create
+      <span>Front&#x2D;end developer,</span> I combine creativity and technical skills to create
       innovative solutions.
     </p>
     <div class="hero-menu">

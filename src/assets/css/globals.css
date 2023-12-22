@@ -1,13 +1,14 @@
 *,
 *::before,
 *::after {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 :root {
-  --font-sans: "Rubik", "Segoe UI", "Ubuntu", -apple-system, system-ui, sans-serif;
+  --font-sans: "Rubik", "Noto Color Emoji", "Segoe UI", "Ubuntu", -apple-system, system-ui,
+    sans-serif;
   --font-code: "Inconsolata", "Consolas", "Menlo", "Liberation Mono", monospace;
   --font-xs: 12px;
   --font-sm: 14px;
@@ -36,6 +37,7 @@
   --accolor: hsl(var(--accent-hue), 100%, var(--accent-lightness));
 
   --background-color: var(--pmcolor);
+  --background-image: conic-gradient(at top right, var(--sdcolor), var(--pmcolor));
   --color: var(--qncolor);
   --border-color: hsla(var(--accent-hue), 0%, var(--border-lightness), 0.125);
   --highlight: hsla(var(--accent-hue), 100%, var(--accent-lightness), 0.25);
@@ -77,13 +79,14 @@ a {
 }
 
 button {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   font-family: inherit;
   font-size: var(--font-md);
-  color: inherit;
+  line-height: inherit;
   border: none;
   cursor: pointer;
+  color: inherit;
   background-color: transparent;
 }
 
@@ -99,7 +102,7 @@ section {
 .container {
   max-width: var(--max-w);
   width: 90%;
-  margin: 0px auto;
+  margin: 0 auto;
 }
 
 .wrapper {
@@ -116,16 +119,20 @@ section {
 
 .link {
   color: var(--accolor);
-  text-decoration: underline;
+
+  &:is(:hover, :focus) {
+    background-color: var(--highlight);
+  }
 }
 
 /** Section **/
 .section {
-  margin-block-end: 2rem;
+  padding-block-end: clamp(0.75rem, 4vmax, 1.5rem);
 }
 
 .section-title {
   font-size: var(--headline-2);
+  text-transform: capitalize;
 }
 
 .section-paragraph {
@@ -151,7 +158,7 @@ section {
 .menu-spp {
   width: 3px;
   height: 3px;
-  margin: 0px 0.525rem;
+  margin: 0 0.525rem;
   display: block;
   border-radius: var(--border-xx);
   background-color: var(--ttcolor);
@@ -163,8 +170,10 @@ section {
   flex-wrap: wrap;
   gap: 0.75rem;
   list-style: none;
+  cursor: default;
 
   & > .menu-item > .menu-link {
+    padding: 0.25rem;
     text-transform: capitalize;
 
     &:is(:hover, :focus, .active) {
@@ -175,7 +184,7 @@ section {
 
 /** Hero **/
 .hero {
-  height: 20rem;
+  padding-block-start: clamp(4rem, 4vmax, 8rem);
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -187,7 +196,7 @@ section {
 }
 
 .hero-description {
-  --max-w: 33rem;
+  --max-w: 32rem;
   max-width: var(--max-w);
   font-size: var(--font-mx);
   margin-bottom: 1.25rem;
@@ -210,7 +219,6 @@ section {
     border-radius: var(--border-sm);
     background-color: var(--qncolor);
     text-transform: capitalize;
-    text-align: center;
 
     &:last-child {
       background-color: var(--accolor);
@@ -218,11 +226,24 @@ section {
   }
 }
 
+/** Skills **/
+.skills {
+  --max-w: 32rem;
+  max-width: var(--max-w);
+  width: 100%;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    font-style: italic;
+  }
+}
+
 /** Cards **/
 .card {
   --x: 1.25rem;
   --m: 0.75rem;
-  --s: 0.55rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -232,7 +253,8 @@ section {
   border: 1px solid var(--border-color);
   border-radius: var(--border-sm);
   cursor: default;
-  background-image: conic-gradient(at top right, var(--sdcolor), var(--pmcolor));
+  background-color: var(--sdcolor);
+  background-image: var(--background-image);
   transition: transform 200ms ease-out;
   overflow: hidden;
 
@@ -248,6 +270,7 @@ section {
 
 .card-body {
   flex: 1;
+
   & > .card-title {
     font-size: var(--headline-3);
     margin-bottom: 0.25rem;
@@ -256,70 +279,90 @@ section {
     & > a:before {
       content: "";
       position: absolute;
-      inset: 0px;
+      inset: 0;
     }
   }
 }
 
 .card-stats {
   padding-top: var(--m);
-  gap: 0px !important;
+  gap: 0.25rem;
   font-size: var(--font-sm);
   color: var(--ttcolor);
   border-top: 1px solid var(--border-color);
-}
 
-/** Contact **/
-.contact-container {
-  & > .wrapper {
-    & > .card {
-      min-height: 240px;
-
-      & > .card-body {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: var(--m);
-
-        & > .card-stats {
-          padding-top: 0px;
-          border: none;
-        }
-      }
-    }
+  & > .menu-item:first-child:after {
+    content: "/";
+    margin-left: 0.25rem;
   }
 }
 
-.card-icon {
-  width: 32px;
-  height: 32px;
+/** Filter **/
+.filter {
+  margin-block-end: clamp(0.75rem, 4vmax, 1.5rem);
+  padding-bottom: clamp(0.75rem, 4vmax, 1.5rem);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-button {
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  padding: 0.525rem 0.75rem;
+  font-size: var(--font-sm);
+  background-color: var(--sdcolor);
+  background-image: var(--background-image);
+  border-radius: var(--border-sm);
+  border: 1px solid var(--border-color);
+
+  & > span {
+    width: 100%;
+  }
+
+  &:is(:hover, :focus) {
+    background-image: none;
+    background-color: var(--highlight);
+  }
+
+  &.active {
+    color: var(--sdcolor);
+    background-color: var(--accolor);
+    background-image: none;
+    border-color: var(--accolor);
+  }
 }
 
 /** Footer **/
-footer {
-  padding: calc(var(--nav-h) / 2) 0px;
-  border-top: 1px solid var(--border-color);
-  background-image: conic-gradient(at top right, var(--sdcolor), var(--pmcolor));
+.footer {
+  margin-bottom: 5%;
+  padding: calc(var(--nav-h) / 2);
+  background-color: var(--sdcolor);
+  background-image: var(--background-image);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-sm);
+  font-size: var(--font-sm);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 
-  & > .footer {
-    font-size: var(--font-sm);
-    font-style: italic;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+  & > div {
+    width: 70%;
   }
 }
 
-@media screen and (width <=600px) {
-  footer {
-    & > .footer {
-      display: flex;
-      flex-direction: column;
-      align-items: start;
-      justify-content: start;
+@media screen and (width <= 600px) {
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+
+    & > div {
+      width: 100%;
     }
   }
 }
@@ -328,7 +371,7 @@ footer {
 .error {
   width: 100%;
   min-height: 100vh;
-  margin: 0px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -338,7 +381,7 @@ footer {
 
   &.absolute {
     position: absolute;
-    inset: 0px;
+    inset: 0;
   }
 }
 
@@ -347,18 +390,20 @@ footer {
 }
 
 .error-paragraph {
-  --max-p: 250px;
+  --max-p: 250;
   max-width: var(--max-p);
   width: 100%;
-  margin: 0.25rem 0px 0px 0px;
+  margin: 0.25rem 0 0 0;
   font-size: var(--font-mx);
   text-align: center;
 }
 
 .error-button {
-  margin: 1.25rem 0px 0px 0px;
+  margin: 1.25rem 0 0 0;
   padding: 1.25rem;
   text-transform: uppercase;
-  border-radius: var(--border-sm);
   background-color: var(--sdcolor);
+  background-image: var(--background-image);
+  border-radius: var(--border-sm);
+  box-shadow: var(--shadow-sm);
 }

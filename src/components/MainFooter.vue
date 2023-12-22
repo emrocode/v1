@@ -1,6 +1,3 @@
-<script setup>
-import MainLink from "@/components/MainLink.vue";
-</script>
 <template>
   <footer>
     <div class="container footer">
@@ -10,9 +7,9 @@ import MainLink from "@/components/MainLink.vue";
       </div>
       <ul class="menu">
         <li class="menu-item" v-for="(item, i) in connections" :key="i">
-          <MainLink :to="item.url" class="menu-link">
+          <Link :to="item.url" class="menu-link">
             {{ item.platform }}
-          </MainLink>
+          </Link>
         </li>
       </ul>
     </div>

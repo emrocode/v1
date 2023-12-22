@@ -1,5 +1,5 @@
 <template>
-  <!-- Boxicons: Premium web friendly icons for free https://boxicons.com/ -->
+  <!-- Boxicons: Premium web friendly icons for free (https://boxicons.com/) -->
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
