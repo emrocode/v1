@@ -3,9 +3,7 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
 </script>
 <template>
   <div>
-    <div v-if="loading">Loading...</div>
-    <div v-if="error">Error grabbing repositories. Try again later.</div>
-    <ul class="menu filter" v-show="!loading && !error && isArchivePage">
+    <ul class="menu filter" v-show="showFilter">
       <li class="menu-item" v-for="(lang, i) in useLanguages" :key="i">
         <button
           class="filter-button"
@@ -21,6 +19,8 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
         </button>
       </li>
     </ul>
+    <div v-show="loading">Loading...</div>
+    <div v-show="error">Error grabbing repositories. Try again later.</div>
     <TransitionGroup
       tag="div"
       class="wrapper"
@@ -32,7 +32,7 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
         :key="repo.id"
         :data-index="index"
         :date="repo.created_at"
-        :external="repo.html_url"
+        :github="repo.html_url"
         :name="repo.name"
         :description="repo.description"
         :stargazers_count="repo.stargazers_count"
@@ -65,33 +65,34 @@ export default {
       loading: true,
       selectedLanguage: "All",
       updateInterval: 7 * 24 * 60 * 60 * 1000,
+      sortByDate: (a, b) => new Date(b.created_at) - new Date(a.created_at),
+      sortByStar: (a, b) => b.stargazers_count - a.stargazers_count,
     };
   },
   computed: {
     repoToShow() {
-      const data = [...this.repositories];
+      const repositories = this.repositories;
 
       if (this.selectedLanguage !== "All") {
-        return data
+        return repositories
           .filter(repo => repo.language === this.selectedLanguage)
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          .sort(this.sortByDate);
       }
 
-      // if maxItems is not defined, sort by date; else, sort by stars
-      if (this.maxItems === this.$options.props.maxItems.default) {
-        return data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      } else {
-        // top maxItems (4) most stars
-        return data.sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, this.maxItems);
+      // if maxItems sort by stargazers count
+      if (this.maxItems !== this.$options.props.maxItems.default) {
+        return repositories.sort(this.sortByStar).slice(0, this.maxItems);
       }
+
+      return repositories.sort(this.sortByDate);
     },
     useLanguages() {
-      const lang = [...new Set(this.repositories.map(repo => repo.language))];
-      lang.unshift("All");
-      return lang;
+      const useLanguages = [...new Set(this.repositories.map(repo => repo.language))];
+      useLanguages.unshift("All");
+      return useLanguages;
     },
-    isArchivePage() {
-      return this.$route.name === "archive";
+    showFilter() {
+      return this.$route.name === config.navs.top[0].key;
     },
   },
   methods: {
@@ -169,8 +170,8 @@ export default {
         }
       }
     },
-    selectLanguage(lang) {
-      this.selectedLanguage = lang;
+    selectLanguage(language) {
+      this.selectedLanguage = language;
     },
     refreshLocalData() {
       window.localStorage.removeItem(storageKey);

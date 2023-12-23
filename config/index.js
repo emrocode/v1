@@ -28,13 +28,6 @@ const config = {
     },
   ],
 
-  skills: {
-    languages: ["js", "ts", "pug", "html", "css"],
-    frameworks: ["nodejs", "next", "react", "vue", "tailwindcss"],
-    tools: ["git", "github", "vscode", "vite", "vercel"],
-    design: ["figma"],
-  },
-
   connections: [
     {
       platform: "LinkedIn",

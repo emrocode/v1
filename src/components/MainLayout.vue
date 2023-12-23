@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     showFooter() {
-      return this.$route.name !== "error";
+      return this.$route.path === "/";
     },
   },
 };

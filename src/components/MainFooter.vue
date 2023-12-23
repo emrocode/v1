@@ -1,6 +1,6 @@
 <template>
   <footer>
-    <div class="container footer">
+    <div class="container wrapper footer">
       <div>
         <p>Built with Vuejs v{{ vueVersion }}</p>
         <p>Hand-crafted by Emilio Romero &copy; {{ year }}</p>
