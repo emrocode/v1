@@ -22,7 +22,7 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
     <div v-show="loading">Loading...</div>
     <div v-show="error">Error grabbing repositories. Try again later.</div>
     <TransitionGroup
-      tag="div"
+      tag="section"
       class="wrapper"
       @beforeEnter="beforeEnter"
       @enter="enter"

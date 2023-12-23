@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .vue,.js --fix",
     "prettier": "prettier --write ./index.html config/*.js src/**/*.{js,css,vue}",
-    "clean": "rimraf /dist"
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",

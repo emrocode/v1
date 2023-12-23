@@ -4,7 +4,7 @@ import GitHubIcon from "@/assets/icons/brand/IconTelegram.vue";
 <template>
   <section>
     <div class="section">
-      <h2 class="section-title">noteworthy projects</h2>
+      <h2 class="section-title">GitHub Projects</h2>
       <p class="section-paragraph">
         Most notable projects on GitHub.
         <Link :to="to" class="link">View the {{ to.key }}</Link>

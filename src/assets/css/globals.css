@@ -93,11 +93,6 @@ svg {
   display: block !important;
 }
 
-section {
-  padding-block-start: 1rem;
-  margin-block-end: min(6rem, 12vh);
-}
-
 .container {
   max-width: var(--max-w);
   width: 90%;
@@ -125,14 +120,14 @@ section {
 }
 
 /** Section **/
-.section {
-  padding-block-end: clamp(0.75rem, 4vmax, 1.5rem);
+section {
+  padding-block-start: clamp(0.75rem, 4vmax, 1.5rem);
+  margin-block-end: min(6rem, 12vh);
 }
 
 .section-title {
   padding-block-end: 0.25rem;
   font-size: var(--headline-2);
-  text-transform: capitalize;
 }
 
 .section-paragraph {
@@ -312,7 +307,6 @@ section {
 
 /** Filter **/
 .filter {
-  margin-block-end: clamp(0.75rem, 4vmax, 1.5rem);
   padding-bottom: clamp(0.75rem, 4vmax, 1.5rem);
   border-bottom: 1px solid var(--border-color);
 }
