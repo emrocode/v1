@@ -10,7 +10,7 @@ import IconBriefcase from "@/assets/icons/IconBriefcase.vue";
     </span>
     <div class="card-body">
       <h3 class="card-title">
-        <Link :to="github">{{ formatName(name) }}</Link>
+        <VueLink :to="github">{{ formatName(name) }}</VueLink>
       </h3>
       <p class="card-paragraph">{{ description }}</p>
     </div>
@@ -43,9 +43,9 @@ export default {
     },
     formatName(name) {
       return name
-        .replace(/-|_|js/g, " ")
+        .replace(/-/g, " ")
         .replace(/and/g, "&")
-        .replace(/api|rest/gi, match => match.toUpperCase());
+        .replace(/api|rest|js/gi, match => match.toUpperCase());
     },
   },
 };

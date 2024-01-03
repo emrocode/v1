@@ -1,13 +1,13 @@
 <template>
   <section>
-    <Fetch :url="apiURL" />
+    <VueFetcher :url="apiURL" />
   </section>
 </template>
 <script>
 export default {
   data() {
     return {
-      apiURL: import.meta.env.VITE_API_ENDPOINT,
+      apiURL: import.meta.env.VITE_GITHUB_ENDPOINT,
     };
   },
 };

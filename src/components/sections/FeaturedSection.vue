@@ -1,16 +1,13 @@
-<script setup>
-import GitHubIcon from "@/assets/icons/brand/IconTelegram.vue";
-</script>
 <template>
   <section>
-    <div class="section">
-      <h2 class="section-title">GitHub Projects</h2>
-      <p class="section-paragraph">
-        Most notable projects on GitHub.
-        <Link :to="to" class="link">View the {{ to.key }}</Link>
+    <div class="box">
+      <h2 class="box-title">notable projects</h2>
+      <p class="box-paragraph">
+        Most notable projects on GitHub&period;
+        <VueLink :to="to" class="link">View the {{ to.key }}</VueLink>
       </p>
     </div>
-    <Fetch :url="apiURL" :maxItems="maxItems" />
+    <VueFetcher :url="apiURL" :maxItems="maxItems" />
   </section>
 </template>
 <script>
@@ -19,7 +16,7 @@ import config from "@config";
 export default {
   data() {
     return {
-      apiURL: import.meta.env.VITE_API_ENDPOINT,
+      apiURL: import.meta.env.VITE_GITHUB_ENDPOINT,
       maxItems: 4,
       to: config.navs.top[0],
     };

@@ -6,14 +6,14 @@ import IconTone from "@/assets/icons/IconTone.vue";
 <template>
   <header>
     <nav class="container nav">
-      <Link to="/" aria-label="Emilio Romero Logo" class="nav-brand">
+      <VueLink to="/" aria-label="Emilio Romero Logo" class="nav-brand">
         <component :is="isHome ? IconLogo : IconArrowBack" />
-      </Link>
+      </VueLink>
       <ul class="menu">
         <li class="menu-item" v-for="item in navs" :key="item.key">
-          <Link :to="item.path" class="menu-link" activeClass="active">
+          <VueLink :to="item.path" class="menu-link" activeClass="active">
             {{ item.key }}
-          </Link>
+          </VueLink>
         </li>
         <li class="menu-item menu-spp" v-if="navs[0].key && navs[0].path"></li>
         <li class="menu-item">

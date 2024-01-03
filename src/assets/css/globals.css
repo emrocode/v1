@@ -7,8 +7,7 @@
 }
 
 :root {
-  --font-sans: "Rubik", "Noto Color Emoji", "Segoe UI", "Ubuntu", -apple-system, system-ui,
-    sans-serif;
+  --font-sans: "Rubik", "Segoe UI", "Ubuntu", -apple-system, system-ui, sans-serif;
   --font-code: "Inconsolata", "Consolas", "Menlo", "Liberation Mono", monospace;
   --font-xs: 12px;
   --font-sm: 14px;
@@ -21,8 +20,8 @@
   --border-md: 0.75rem;
   --border-xm: 1.25rem;
   --border-xx: 9999rem;
-  --headline-1: 2.25rem;
-  --headline-2: 1.55rem;
+  --headline-1: 2.55rem;
+  --headline-2: 1.75rem;
   --headline-3: 1.25rem;
 
   --accent-hue: 200;
@@ -31,7 +30,7 @@
 
   --pmcolor: hsl(0, 0%, 100%);
   --sdcolor: hsl(0, 0%, 96%);
-  --ttcolor: hsl(0, 0%, 35%);
+  --ttcolor: hsl(0, 0%, 40%);
   --qtcolor: hsl(0, 0%, 12%);
   --qncolor: hsl(0, 0%, 20%);
   --accolor: hsl(var(--accent-hue), 100%, var(--accent-lightness));
@@ -72,6 +71,11 @@ body {
   scroll-behavior: smooth;
 }
 
+section {
+  padding-block-start: clamp(0.75rem, 4vmax, 1.5rem);
+  margin-block-end: min(6rem, 12vh);
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -87,6 +91,13 @@ button {
   cursor: pointer;
   color: inherit;
   background-color: transparent;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  font-style: italic;
 }
 
 svg {
@@ -113,25 +124,23 @@ svg {
 
 .link {
   color: var(--accolor);
+  text-decoration: underline;
 
   &:is(:hover, :focus) {
     background-color: var(--highlight);
   }
 }
 
-/** Section **/
-section {
-  padding-block-start: clamp(0.75rem, 4vmax, 1.5rem);
-  margin-block-end: min(6rem, 12vh);
-}
-
-.section-title {
+/** Box **/
+.box-title {
   padding-block-end: 0.25rem;
   font-size: var(--headline-2);
+  text-transform: capitalize;
 }
 
-.section-paragraph {
+.box-paragraph {
   font-size: var(--font-mx);
+  color: var(--ttcolor);
 }
 
 /** Navigation **/
@@ -140,14 +149,6 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.nav-brand {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: start;
 }
 
 .menu-spp {
@@ -177,64 +178,44 @@ section {
 }
 
 /** Hero **/
+.hero-box {
+  margin-block-start: clamp(3rem, 3vw, 6rem);
+}
+
 .hero {
-  padding-block-start: clamp(4rem, 4vmax, 8rem);
   display: flex;
   flex-direction: column;
   align-items: start;
   justify-content: center;
+
+  & .menu {
+    margin-top: 0.525rem;
+
+    & .menu-link {
+      column-gap: 0.25rem;
+      &:is(:hover, :focus) {
+        color: var(--accolor);
+      }
+    }
+  }
 }
 
 .hero-title {
   font-size: clamp(var(--headline-1), 4vw, 2.75rem);
 }
 
+.hero-sub {
+  font-size: clamp(1.25rem, 4vw, 1.45rem);
+  font-weight: 400;
+  margin: 0.25rem 0 0.525rem 0;
+}
+
 .hero-description {
-  --max-w: 32rem;
-  max-width: var(--max-w);
+  max-width: 32rem;
   font-size: var(--font-mx);
-  margin-bottom: 1.25rem;
-
-  & > span {
-    color: var(--accolor);
-  }
 }
 
-.hero-menu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.525rem;
-
-  & > .hero-button {
-    padding: 0.75rem 1rem;
-    gap: 0.525rem;
-    font-size: var(--font-mx);
-    color: var(--pmcolor);
-    border-radius: var(--border-sm);
-    background-color: var(--qncolor);
-    text-transform: capitalize;
-
-    &:last-child {
-      background-color: var(--accolor);
-    }
-  }
-}
-
-/** Skills **/
-.skills {
-  --max-w: 32rem;
-  max-width: var(--max-w);
-  width: 100%;
-
-  & > img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    font-style: italic;
-  }
-}
-
-/** Cards **/
+/** Cards & Posts **/
 .card {
   --x: 1.25rem;
   --m: 0.75rem;
@@ -258,14 +239,14 @@ section {
 }
 
 .card-icon {
-  width: 144px;
-  height: 144px;
-  margin: auto;
-  color: var(--sdcolor);
   position: absolute;
   top: 0;
   bottom: 0;
   right: var(--m);
+  width: 9rem;
+  height: 9rem;
+  margin-block: auto;
+  color: var(--sdcolor);
 }
 
 .card-date {
@@ -305,38 +286,70 @@ section {
   }
 }
 
-/** Filter **/
-.filter {
-  padding-bottom: clamp(0.75rem, 4vmax, 1.5rem);
-  border-bottom: 1px solid var(--border-color);
+.post {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  gap: 0.525rem;
+  padding: 1.25rem;
+  border-left: 4px solid var(--border-color);
+  text-wrap: pretty;
+
+  & .post-title {
+    font-size: var(--headline-3);
+    margin-bottom: 0.25rem;
+    word-wrap: break-word;
+
+    &:is(:hover, :focus) {
+      text-decoration: underline;
+    }
+
+    & > a:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 99;
+    }
+  }
 }
 
-.filter-button {
-  height: 2.25rem;
+.post-date {
+  font-size: var(--font-sm);
+  color: var(--ttcolor);
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0 0.75rem;
-  font-size: var(--font-sm);
-  background-color: var(--sdcolor);
-  background-image: var(--background-image);
-  border-radius: var(--border-sm);
-  border: 1px solid var(--border-color);
+}
 
-  & > span {
-    width: 100%;
-  }
+.post-description {
+  color: var(--ttcolor);
+}
 
-  &:is(:hover, :focus) {
-    background-image: none;
-    background-color: var(--highlight);
-  }
+/** Filter **/
+.filter-box {
+  gap: 0.525rem;
+  padding-bottom: clamp(0.75rem, 4vmax, 1.5rem);
+  border-bottom: 1px solid var(--border-color);
 
-  &.active {
-    color: var(--sdcolor);
-    background-color: var(--accolor);
-    background-image: none;
-    border-color: var(--accolor);
+  & .filter-button {
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    font-size: var(--font-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: var(--border-sm);
+    border: 1px solid var(--border-color);
+    background-color: var(--sdcolor);
+    background-image: var(--background-image);
+
+    &.active {
+      color: var(--sdcolor);
+      border-color: var(--accolor);
+      background-color: var(--accolor);
+      background-image: none;
+    }
   }
 }
 
@@ -345,6 +358,7 @@ footer {
   border-top: 1px solid var(--border-color);
   background-color: var(--sdcolor);
   background-image: var(--background-image);
+
   & > .footer {
     padding: calc(var(--nav-h) * 0.5) 0;
     font-size: var(--font-sm);

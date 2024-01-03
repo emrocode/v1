@@ -16,18 +16,35 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: {
+        title: "Home",
+      },
     },
     {
       path: "/archive",
       name: "archive",
       component: () => import("@/views/ArchiveView.vue"),
+      meta: {
+        title: "Archive",
+      },
     },
     {
       path: "/:pathMatch(.*)*",
       name: "error",
       component: NotFoundView,
+      meta: {
+        title: "NotFound",
+      },
     },
   ],
+});
+
+router.beforeEach((to, _from, next) => {
+  if (to.meta && to.meta.title) {
+    document.title = `${to.meta.title} / Emilio Romero`;
+  }
+
+  next();
 });
 
 export default router;

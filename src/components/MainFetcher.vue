@@ -3,34 +3,39 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
 </script>
 <template>
   <div>
-    <ul class="menu filter" v-show="showFilter">
+    <ul class="menu filter-box" v-show="showFilter">
       <li class="menu-item" v-for="(lang, i) in useLanguages" :key="i">
         <button
-          class="filter-button"
+          class="filter-button center"
           :class="{ active: selectedLanguage === lang }"
+          :title="lang"
           @click="selectLanguage(lang)">
           {{ lang || "Unknown" }}
         </button>
       </li>
       <li class="menu-item">
-        <button class="filter-button active" @click="refreshLocalData">
+        <button class="filter-button center active" @click="refreshLocalData">
           <span>Refresh data</span>
           <IconRefresh />
         </button>
       </li>
     </ul>
-    <div v-show="loading">Loading...</div>
-    <div v-show="error">Error grabbing repositories. Try again later.</div>
+    <section v-show="loading">
+      <p>Loading...</p>
+    </section>
+    <section v-show="error">
+      <p>Error grabbing repositories. Try again later.</p>
+    </section>
     <TransitionGroup
       tag="section"
       class="wrapper"
       @beforeEnter="beforeEnter"
       @enter="enter"
       @leave="leave">
-      <Card
-        v-for="(repo, index) in repoToShow"
+      <VueCard
+        v-for="(repo, i) in repoToShow"
         :key="repo.id"
-        :data-index="index"
+        :data-index="i"
         :date="repo.created_at"
         :github="repo.html_url"
         :name="repo.name"
@@ -43,7 +48,6 @@ import IconRefresh from "@/assets/icons/IconRefresh.vue";
 <script>
 import { Octokit } from "@octokit/rest";
 import config from "@config";
-import pkg from "@pkg";
 
 var storageKey = "github-data";
 
@@ -98,10 +102,7 @@ export default {
   methods: {
     async grabRepositories() {
       try {
-        const octokit = new Octokit({
-          auth: import.meta.env.VITE_GITHUB_TOKEN,
-        });
-
+        const octokit = new Octokit();
         var data = [];
         var page = 1;
 
